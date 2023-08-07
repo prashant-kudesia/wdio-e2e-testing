@@ -1,4 +1,8 @@
+import dotenv from "dotenv"
+dotenv.config();
 import type { Options } from '@wdio/types'
+let headless = process.env.HEADLESS
+console.log(`>> The Headless Flag: ${headless}`)
 export const config: Options.Testrunner = {
     //
     // ====================
@@ -13,7 +17,7 @@ export const config: Options.Testrunner = {
             transpileOnly: true
         }
     },
-    
+
     //
     // ==================
     // Specify Test Files
@@ -34,6 +38,12 @@ export const config: Options.Testrunner = {
         `${process.cwd()}/test/features/**/*.feature`
         // ToDo: define location for spec files here
     ],
+    suites: {
+        Test: [
+            // `${process.cwd()}/test/features/**/*.feature`
+            `./test/features/**/*.feature`
+        ]
+    },
     // Patterns to exclude.
     exclude: [
         // 'path/to/excluded/files'
@@ -54,7 +64,7 @@ export const config: Options.Testrunner = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    maxInstances: 1,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
@@ -62,8 +72,8 @@ export const config: Options.Testrunner = {
     //
     capabilities: [{
         browserName: 'chrome',
-        "goog:chromeOptions":{
-            args:["--disable-web-security"]
+        "goog:chromeOptions": {
+            args: (headless?.toUpperCase() === "Y") ? ["--disable-web-security", "--headless", "--disable-dev-shm-usage", "--no-sandbox", "--window-size=1920,1080"] : [],
         },
     }],
 
@@ -74,7 +84,7 @@ export const config: Options.Testrunner = {
     // Define all options that are relevant for the WebdriverIO instance here
     //
     // Level of logging verbosity: trace | debug | info | warn | error | silent
-    logLevel: 'info',
+    logLevel: 'silent',
     //
     // Set specific log levels per logger
     // loggers:
@@ -100,7 +110,7 @@ export const config: Options.Testrunner = {
     // gets prepended directly.
     // baseUrl: 'https://the-internet.herokuapp.com',
     // baseUrl:'https://www.amazon.in',
-    baseUrl:'https://localhost',
+    baseUrl: 'https://localhost',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 10000,
@@ -116,7 +126,7 @@ export const config: Options.Testrunner = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['vscode','chromedriver'],
+    services: ['vscode', 'chromedriver'],
 
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -138,7 +148,7 @@ export const config: Options.Testrunner = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: https://webdriver.io/docs/dot-reporter
-    reporters: ['spec',['allure', {outputDir: 'allure-results'}]],
+    reporters: ['spec', ['allure', { outputDir: 'allure-results' }]],
 
     //
     // If you are using Cucumber you need to specify the location of your step definitions.
@@ -166,7 +176,7 @@ export const config: Options.Testrunner = {
         // <boolean> Enable this config to treat undefined definitions as warnings.
         ignoreUndefinedDefinitions: false
     },
-    
+
     //
     // =====
     // Hooks
@@ -287,7 +297,7 @@ export const config: Options.Testrunner = {
      */
     // afterFeature: function (uri, feature) {
     // },
-    
+
     /**
      * Runs after a WebdriverIO command gets executed
      * @param {string} commandName hook command name

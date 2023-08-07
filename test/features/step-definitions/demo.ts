@@ -1,6 +1,6 @@
 import { Given, Then, When } from "@wdio/cucumber-framework";
 import chai from "chai";
-import { Key } from 'webdriverio';
+// import { Key } from 'webdriverio';
 
 Given(/^Google page is opened$/, async () => {
     console.log("Before opening browser...");
@@ -427,7 +427,7 @@ When(/^Perfon web interactions$/, async function () {
     })
 
 
-    await browser.debug()
+    // await browser.debug()
 })
 
 export { };
